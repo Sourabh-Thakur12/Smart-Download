@@ -1,0 +1,11 @@
+flowchart TD
+    A["User clicks download"] --> B["background.js intercepts onCreated"]
+ subgraph s1["Chrome API"]
+    B --> C["Pause download"]
+    C --> D["Popup UI prompts for tag input"]
+    D --> E["popup.js processes input"]
+    E --> F["Match tag using config.json"]
+    F --> G["Resume download with folder path"]
+  end
+    G --> H["Download at loacal storage"]
+    H --> I["Log result to chrome.storage.local"]
