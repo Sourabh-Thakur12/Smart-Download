@@ -1,11 +1,34 @@
-flowchart TD
-    A["User clicks download"] --> B["background.js intercepts onCreated"]
- subgraph s1["Chrome API"]
-    B --> C["Pause download"]
-    C --> D["Popup UI prompts for tag input"]
-    D --> E["popup.js processes input"]
-    E --> F["Match tag using config.json"]
-    F --> G["Resume download with folder path"]
-  end
-    G --> H["Download at loacal storage"]
-    H --> I["Log result to chrome.storage.local"]
+    graph TD
+    subgraph Browser [Google Chrome]
+        A1[User clicks a download link]
+        A2[Chrome triggers onCreated event]
+        A3[Extension pauses download]
+        A4[Popup prompts user for tag/folder]
+        A5[User enters tag and confirms]
+    end
+
+    subgraph Extension
+        A6[background.js]
+        A7[popup.js]
+        A8[logger.js]
+        A9[config.json]
+    end
+
+    subgraph Storage
+        B1[chrome.storage.local]
+        B2[logs.json]
+    end
+
+    A1 --> A2
+    A2 --> A6
+    A6 --> A3
+    A3 --> A4
+    A4 --> A5
+    A5 --> A7
+    A7 --> A9
+    A7 --> A6
+    A7 -->|Log User Input| A8
+    A7 -->|Store Logs| B1
+    A6 -->|Download File| Chrome[Chrome Downloads API]
+    Chrome -->|Log Result| A8
+    A8 --> B2
